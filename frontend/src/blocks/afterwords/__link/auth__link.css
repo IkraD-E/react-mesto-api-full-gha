@@ -1,0 +1,12 @@
+.afterwords__link {
+    margin: 0;
+    padding: 0;
+    
+    color: #fff;
+    text-decoration: none;
+    transition: opacity .8s ease-in-out;
+}
+
+.afterwords__link:hover {
+    opacity: .6;
+}

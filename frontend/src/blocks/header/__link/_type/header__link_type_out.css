@@ -1,0 +1,20 @@
+.header__link_type_out {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 22px;
+    cursor: pointer;
+    text-decoration: none;
+    color: #A9A9A9;
+
+    max-height: 22px;
+    text-align: right;
+    margin: 0;
+    margin-top: 6px;
+    margin-right: 30px;
+
+    transition: opacity .8s ease-in-out;
+}
+
+.header__link_type_out:hover {
+    opacity: .6;
+}

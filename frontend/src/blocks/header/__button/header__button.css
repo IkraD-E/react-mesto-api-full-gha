@@ -1,0 +1,26 @@
+.header__button {
+    margin: 0 30px 0 0;
+    padding: 0;
+    border: none;
+    padding: 0;
+    background-color: transparent;
+    background-size: cover;
+    width: 20px;
+    height: 20px;
+    transition: opacity .8s ease-in-out;
+    cursor: pointer;
+    display: flex;
+    align-self: baseline;
+    transition: opacity .8s ease-in-out;
+    display: none;
+}
+
+.header__button:hover {
+    opacity: .6;
+}
+
+@media screen and (max-width: 767px) {
+    .header__button{
+        display: block;
+    }
+}

@@ -1,0 +1,17 @@
+.element {
+    position: relative;
+    border-radius: 10px;
+    max-width: 282px;
+    width: 100%;
+    min-height: 361px;
+    display: flex;
+    flex-wrap: wrap;
+    overflow: hidden;
+    padding: 0;
+}
+
+@media screen and (max-width: 860px) {
+    .element {
+        max-width: none;
+    }
+}

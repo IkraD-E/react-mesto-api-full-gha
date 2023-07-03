@@ -1,0 +1,13 @@
+.mobile-menu {
+    padding: 40px 0;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(84, 84, 84, .7);
+}
