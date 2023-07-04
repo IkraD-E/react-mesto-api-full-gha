@@ -1,7 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
 const { httpPattern } = require('../const/patterns');
-const auth = require('../middlewares/auth');
 
 const {
   createCard,
@@ -10,8 +9,6 @@ const {
   addLike,
   deleteLike,
 } = require('../controllers/cards');
-
-router.use(auth);
 
 router.delete('/:cardId', celebrate({
   params: Joi.object().keys({

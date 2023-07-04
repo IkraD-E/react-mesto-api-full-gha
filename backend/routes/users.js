@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const auth = require('../middlewares/auth');
 
 const {
   getUsers,
@@ -10,8 +9,6 @@ const {
   getUserMe,
 } = require('../controllers/users');
 const { imagePattern } = require('../const/patterns');
-
-router.use(auth);
 
 router.get('/', getUsers);
 
