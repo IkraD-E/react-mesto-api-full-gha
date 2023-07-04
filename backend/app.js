@@ -24,7 +24,7 @@ mongoose
 app.use(express.json());
 
 app.use(cookieParser());
-app.use('/api', routerIndex);
+app.use('/', routerIndex);
 
 app.use((req, res, next) => {
   next(new NotFound('Страница не найдена. Где вы взяли на неё ссылку?'));
