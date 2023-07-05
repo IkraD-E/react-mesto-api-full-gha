@@ -1,5 +1,5 @@
 const apiParams = {
-    link: 'https://mesto.nomoreparties.co/v1/cohort-62/',
+    link: 'https://ikrad.nomoreparties.sbs/',
     headers: {
         authorization: 'e055b3b1-f0a3-420f-954c-707ea8c5fb7b',
         'Content-Type': 'application/json'
@@ -26,7 +26,7 @@ class Api{
     //Сбор информации о пользователе
     getUserDataFromServer() {
         return this._request(
-            `${this._link}users/me`, 
+            `${this._link}users/me`,
             {headers: this._headers}
         );
     }
@@ -34,7 +34,7 @@ class Api{
     //Сбор информации о карточках
     getCardFromServer() {
         return this._request(
-            `${this._link}cards`, 
+            `${this._link}cards`,
             {headers: this._headers}
         );
     }
@@ -42,7 +42,7 @@ class Api{
     //Добавление карточки на сервер
     addNewPlaceToServer({name, link}) {
         return this._request(
-            `${this._link}cards`, 
+            `${this._link}cards`,
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -57,7 +57,7 @@ class Api{
     //Удаление карточки с сервера
     deleteCardFromServer(cardId) {
         return this._request(
-            `${this._link}cards/${cardId}`, 
+            `${this._link}cards/${cardId}`,
             {
                 method: 'DELETE',
                 headers: this._headers
@@ -68,7 +68,7 @@ class Api{
     //Изменить данные о пользователе на сервере
     setUserInfo(data) {
         return this._request(
-            `${this._link}users/me`, 
+            `${this._link}users/me`,
             {
                 method: 'PATCH',
                 body: JSON.stringify({
@@ -84,18 +84,18 @@ class Api{
     //Убрать лайк с сервера
     changeLikeCardStatus(cardId, isLiked) {
         return this._request(
-            `${this._link}cards/${cardId}/likes`, 
+            `${this._link}cards/${cardId}/likes`,
             {
                 method: isLiked ? 'DELETE' : 'PUT',
                 headers: this._headers
-        
+
             }
         );
     }
 
     handleChangeAvatar(newAvatarLink) {
         return this._request(
-            `${this._link}/users/me/avatar`, 
+            `${this._link}/users/me/avatar`,
             {
                 method: 'PATCH',
                 body: JSON.stringify(newAvatarLink),

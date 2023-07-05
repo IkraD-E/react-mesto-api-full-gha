@@ -1,5 +1,5 @@
 const apiParams = {
-    link: 'https://auth.nomoreparties.co/',
+    link: 'https://ikrad.nomoreparties.sbs/',
     headers: {
         'Content-Type': 'application/json'
     }
@@ -25,7 +25,7 @@ class Auth{
     //Сбор информации о пользователе
     checkToken(jwt) {
         return this._request(
-            `${this._link}users/me`, 
+            `${this._link}users/me`,
             {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json',
@@ -36,7 +36,7 @@ class Auth{
     //Добавление пользователя на сервер
     addNewUserToServer(email, password) {
         return this._request(
-            `${this._link}signup`, 
+            `${this._link}signup`,
             {
                 method: 'POST',
                 body: JSON.stringify({
@@ -51,7 +51,7 @@ class Auth{
     //Аутентификация пользователя на сервере
     handleUserAuthorization(email, password) {
         return this._request(
-            `${this._link}signin`, 
+            `${this._link}signin`,
             {
                 method: 'POST',
                 body: JSON.stringify({
