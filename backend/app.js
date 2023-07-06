@@ -6,7 +6,7 @@ const { errors } = require('celebrate');
 const routerIndex = require('./routes/index');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFound = require('./errors/NotFound');
-const cros = require('./middlewares/cros');
+const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
@@ -29,13 +29,13 @@ app.use(cookieParser());
 
 app.use(requestLogger);
 
+app.use(cors);
+
 // app.get('/crash-test', () => {
 //   setTimeout(() => {
 //     throw new Error('Сервер сейчас упадёт');
 //   }, 0);
 // });
-
-app.use(cros);
 
 app.use('/', routerIndex);
 

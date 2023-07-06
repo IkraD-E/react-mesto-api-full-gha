@@ -4,7 +4,7 @@ const allowedCors = [
   'localhost:3000',
 ];
 
-const cros = (req, res, next) => {
+const cors = (req, res, next) => {
   const { method } = req;
   const { origin } = req.headers;
   const requestHeaders = req.headers['access-control-request-headers'];
@@ -24,4 +24,4 @@ const cros = (req, res, next) => {
   return next();
 };
 
-module.exports = cros;
+module.exports = cors;
