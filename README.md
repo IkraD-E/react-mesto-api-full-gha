@@ -12,7 +12,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 51.250.70.13
+IP 51.250.70.13
 
 Frontend https://mesto.ikrad.nomoreparties.sbs/
 
