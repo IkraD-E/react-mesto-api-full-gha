@@ -7,6 +7,7 @@ const routerIndex = require('./routes/index');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFound = require('./errors/NotFound');
 const cros = require('./middlewares/cros');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -26,6 +27,8 @@ app.use(express.json());
 
 app.use(cookieParser());
 
+app.use(requestLogger);
+
 // app.get('/crash-test', () => {
 //   setTimeout(() => {
 //     throw new Error('Сервер сейчас упадёт');
@@ -39,6 +42,8 @@ app.use('/', routerIndex);
 app.use((req, res, next) => {
   next(new NotFound('Страница не найдена. Где вы взяли на неё ссылку?'));
 });
+
+app.use(errorLogger);
 
 app.use(errors());
 
