@@ -12,6 +12,7 @@ const opts = {
   new: true,
   runValidators: true,
 };
+
 module.exports.getUsers = (req, res, next) => {
   User
     .find({})

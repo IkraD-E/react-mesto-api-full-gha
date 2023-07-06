@@ -18,7 +18,6 @@ module.exports.createCard = (req, res, next) => {
       }
     });
 };
-
 module.exports.getCards = (req, res, next) => {
   Card
     .find({})

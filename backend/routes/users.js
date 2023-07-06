@@ -11,7 +11,6 @@ const {
 const { imagePattern } = require('../const/patterns');
 
 router.get('/', getUsers);
-
 router.get('/me', getUserMe);
 
 router.get('/:userId', celebrate({

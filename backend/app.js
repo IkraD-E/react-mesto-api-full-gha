@@ -11,7 +11,6 @@ const cros = require('./middlewares/cros');
 const { PORT = 3000 } = process.env;
 
 const BASE_URL = 'mongodb://127.0.0.1:27017/mestodb';
-
 const app = express();
 
 mongoose
