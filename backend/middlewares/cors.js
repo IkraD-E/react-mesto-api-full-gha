@@ -1,7 +1,10 @@
 const allowedCors = [
-  'https://mesto.ikrad.nomoreparties.sbs/',
-  'https://mesto.ikrad.nomoreparties.sbs/',
+  'http://mesto.ikrad.nomoreparties.sbs',
+  'https://mesto.ikrad.nomoreparties.sbs',
+  'http://ikrad.nomoreparties.sbs',
+  'https://ikrad.nomoreparties.sbs',
   'localhost:3000',
+  'http://localhost:3000',
 ];
 
 const cors = (req, res, next) => {
