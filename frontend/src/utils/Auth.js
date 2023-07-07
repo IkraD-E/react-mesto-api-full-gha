@@ -22,17 +22,6 @@ class Auth{
         return fetch(url, options).then(this._checkResponse)
     }
 
-    //Сбор информации о пользователе
-    checkToken(jwt) {
-        return this._request(
-            `${this._link}users/me`,
-            {
-                method: 'GET',
-                headers: {'Content-Type': 'application/json',
-                    "Authorization" : `Bearer ${jwt}`}}
-        );
-    }
-
     //Добавление пользователя на сервер
     addNewUserToServer(email, password) {
         return this._request(
@@ -43,7 +32,8 @@ class Auth{
                     "password": password,
                     "email": email
                 }),
-                headers: this._headers
+                headers: this._headers,
+                credentials: "include"
             }
         );
     }
@@ -58,11 +48,40 @@ class Auth{
                     "password": password,
                     "email": email
                 }),
-                headers: this._headers
+                headers: this._headers,
+                credentials: "include"
             }
         );
     }
 
+    //Сбор информации о пользователе
+    checkToken() {
+        return this._request(
+            `${this._link}users/me`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include"
+            }
+        );
+    }
+
+    //Удалить куку
+
+    logout() {
+        return this._request(
+            `${this._link}users/me`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include"
+            }
+        );
+    }
 }
 
 export const auth = new Auth(apiParams);

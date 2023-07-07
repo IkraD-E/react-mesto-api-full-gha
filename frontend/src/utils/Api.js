@@ -25,6 +25,7 @@ class Api{
 
     //Сбор информации о пользователе
     getUserDataFromServer() {
+        console.log(222);
         return this._request(
             `${this._link}users/me`,
             {headers: this._headers}
