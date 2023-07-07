@@ -9,7 +9,7 @@ const auth = (req, res, next) => {
     return next(new AuthError('Зайдите в ваш аккаунт'));
   }
 
-  const token = authorization;
+  const token = authorization.replace('Bearer ', '');
   let payload;
 
   try {
