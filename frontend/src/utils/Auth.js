@@ -1,6 +1,6 @@
 const apiParams = {
-    link: 'https://ikrad.nomoreparties.sbs/',
-    // link: 'http://localhost:3001/',
+    // link: 'https://ikrad.nomoreparties.sbs/',
+    link: 'http://localhost:3001/',
     headers: {
         'Content-Type': 'application/json'
     }
@@ -13,7 +13,6 @@ class Auth{
     }
 
     _checkResponse(res) {
-        console.log(res);
         if (res.ok) {
             return res
         }

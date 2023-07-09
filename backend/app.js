@@ -1,5 +1,4 @@
 require('dotenv').config();
-require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
@@ -9,10 +8,8 @@ const errorHandler = require('./middlewares/errorHandler');
 const NotFound = require('./errors/NotFound');
 const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
-const cors = require('./middlewares/cors');
-const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
 
 const BASE_URL = 'mongodb://127.0.0.1:27017/mestodb';
 const app = express();
@@ -45,8 +42,6 @@ app.use('/', routerIndex);
 app.use((req, res, next) => {
   next(new NotFound('Страница не найдена. Где вы взяли на неё ссылку?'));
 });
-
-app.use(errorLogger);
 
 app.use(errorLogger);
 
