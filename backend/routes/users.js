@@ -7,12 +7,15 @@ const {
   updateUserData,
   updateUserAvatar,
   getUserMe,
+  logout,
 } = require('../controllers/users');
 const { imagePattern } = require('../const/patterns');
 
 router.get('/', getUsers);
 
 router.get('/me', getUserMe);
+
+router.delete('/me', logout);
 
 router.get('/:userId', celebrate({
   params: Joi.object().keys({

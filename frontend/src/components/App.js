@@ -29,20 +29,17 @@ function App() {
   }
 
   function handleTokenCheck() {
-    if (localStorage.getItem('jwt')){
-      const jwt = localStorage.getItem('jwt');
-      auth.checkToken(jwt)
-        .then( res => res.json())
-        .then( res => {
-          const response = res;
-          if (response) {
+    auth.checkToken()
+        .then(res => res.json())
+        .then(res => {
+          console.log(res);
+          if (res) {
             setLoggedIn(true);
-            handleSetUserEmail(response.data.email);
+            handleSetUserEmail(res.email);
             navigate("/", {replace: true});
           }
         })
-        .catch(res => console.log(`Ошибка при проверке токена jwt: ${res.status}`));
-    }
+        .catch(res => console.log(res));
   }
 
   React.useEffect(() => {
@@ -50,13 +47,13 @@ function App() {
   }, [])
 
   React.useEffect(() => {
-    Promise.all([api.getUserDataFromServer(), api.getCardFromServer()])
+    loggedIn && Promise.all([api.getUserDataFromServer(), api.getCardFromServer()])
       .then(([userData, cards]) => {
           setUserData(userData);
           setCards(cards);
     })
-      .catch(res => console.log(`Ошибка при получении данных о пользователе и карточках: ${res.status}`));
-  }, []);
+      .catch(res => console.log(res));
+  }, [loggedIn]);
 
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = React.useState(false);
   function handleEditProfileClick() {
@@ -115,12 +112,14 @@ function App() {
 
   function handleCardLike(card) {
     const isLiked = card.likes.some(i => i._id === currentUser._id);
-    
+    console.log(card);
+    console.log(isLiked);
+
     api.changeLikeCardStatus(card._id, isLiked)
       .then((newCard) => {
-        setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        setCards((state) => state.map((oldCard) => oldCard._id === card._id ? newCard : oldCard));
       })
-      .catch(res => console.log(`Ошибка при добавлении лайка: ${res.status}`));
+      .catch(err => console.log(`Ошибка при добавлении лайка: ${err.status}`));
   }
 
   function handleCardDelete(card) {
@@ -131,7 +130,7 @@ function App() {
       .then(() => {
         closeAllPopups();
       })
-      .catch(res => console.log(`Ошибка удаления карточки с сервера: ${res.status}`));
+      .catch(err => console.log(`Ошибка удаления карточки с сервера: ${err.status}`));
   }
 
   function handleUpdateUser(data) {
@@ -145,7 +144,7 @@ function App() {
       .then(() => {
         closeAllPopups();
       })
-      .catch(res => console.log(`Ошибка изменения данных о пользователе: ${res.status}`));
+      .catch(err => console.log(`Ошибка изменения данных о пользователе: ${err.status}`));
   }
 
   function handleUpdateAvatar(link) {
@@ -156,7 +155,7 @@ function App() {
       .then(() => {
         closeAllPopups();
       })
-      .catch(res => console.log(`Ошибка изменения аватара: ${res.status}`));
+      .catch(err => console.log(`Ошибка изменения аватара: ${err.status}`));
   }
 
   function handleAddPlaceSubmit(newCard) {
@@ -165,7 +164,7 @@ function App() {
       .then(() => {
         closeAllPopups();
       })
-      .catch(res => console.log(`Ошибка добавления нового места: ${res.status}`));
+      .catch(err => console.log(`Ошибка добавления нового места: ${err.status}`));
   }
 
   function handleRegisterSubmit(email, password) {
@@ -174,10 +173,10 @@ function App() {
         handleSetServerCallbackStatus(res);
         handleOpenInfoTooltipPopup();
       })
-      .catch(res => {
-        handleSetServerCallbackStatus(res);
+      .catch(err => {
+        handleSetServerCallbackStatus(err);
         handleOpenInfoTooltipPopup();
-        console.log(`Ошибка добавления нового пользователя на сервер: ${res.status}`);
+        console.log(`Ошибка добавления нового пользователя на сервер: ${err.status}`);
       });
   }
 
@@ -185,7 +184,8 @@ function App() {
     auth.handleUserAuthorization(email, password)
       .then((res => res.json()))
       .then((data) =>{
-        if (data.token){
+        console.log(data);
+        if (data){
           localStorage.setItem('jwt', data.token);
           setLoggedIn(true);
           navigate("/", {replace: true});
@@ -194,43 +194,43 @@ function App() {
           return data;
         }
       })
-      .catch(res => {
-        handleSetServerCallbackStatus(res);
+      .catch(err => {
+        handleSetServerCallbackStatus(err);
         handleOpenInfoTooltipPopup();
-        console.log(`Ошибка входа пользователя: ${res.status}`);
+        console.log(`Ошибка входа пользователя: ${err}`);
       });
   }
 
   function handleSignOut() {
-    localStorage.removeItem('jwt');
+    auth.logout();
     setLoggedIn(false);
     navigate('/signin');
   }
-  
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="body">
         <div className="page">
-          <MobileMenu 
-            loggedIn={loggedIn} 
-            handleSignOut={handleSignOut} 
-            email={userEmail} 
+          <MobileMenu
+            loggedIn={loggedIn}
+            handleSignOut={handleSignOut}
+            email={userEmail}
             isHeaderMobileMenuOpen={isHeaderMobileMenuOpen}
           />
-          <Header 
-            loggedIn={loggedIn} 
-            handleSignOut={handleSignOut} 
-            email={userEmail} 
-            isHeaderMobileMenuOpen={isHeaderMobileMenuOpen} 
+          <Header
+            loggedIn={loggedIn}
+            handleSignOut={handleSignOut}
+            email={userEmail}
+            isHeaderMobileMenuOpen={isHeaderMobileMenuOpen}
             onHeaderMenuButton={tuggleHeaderMobileMenu}
           />
           <Routes>
-            <Route 
-              path="/" 
+            <Route
+              path="/"
               element={<ProtectedRoute
-                onEditProfile={handleEditProfileClick} 
-                onAddPlace={handleAddPlaceClick} 
-                onEditAvatar={handleEditAvatarClick} 
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
                 onCardClick={handleCardClick}
                 onCardLikeClick={handleCardLike}
                 onCardDeleteClick={handleDeletePlaceClick}
@@ -239,47 +239,47 @@ function App() {
                 loggedIn={loggedIn}
               />}
             />
-            <Route 
-              path="/signin" 
-              element={<AuthForm onSubmit={handleLogInSubmit} formName="Вход" btnText="Войти"/>} 
+            <Route
+              path="/signin"
+              element={<AuthForm onSubmit={handleLogInSubmit} formName="Вход" btnText="Войти"/>}
             />
-            <Route 
-              path="/signup" 
-              element={<AuthForm onSubmit={handleRegisterSubmit} formName="Регистрация" btnText="Зарегистрироваться"/> } 
+            <Route
+              path="/signup"
+              element={<AuthForm onSubmit={handleRegisterSubmit} formName="Регистрация" btnText="Зарегистрироваться"/> }
             />
           </Routes>
           {loggedIn && (
           <>
             <Footer/>
-            <EditProfilePopup 
-              isOpen={isEditProfilePopupOpen} 
+            <EditProfilePopup
+              isOpen={isEditProfilePopupOpen}
               onClose={closeAllPopups}
               onUpdateUser={handleUpdateUser}
             />
-            <EditAvatarPopup 
-              isOpen={isEditAvatarPopupOpen} 
+            <EditAvatarPopup
+              isOpen={isEditAvatarPopupOpen}
               onClose={closeAllPopups}
               onUpdateAvatar={handleUpdateAvatar}
             />
-            <AddPlacePopup 
-              isOpen={isAddPlacePopupOpen} 
+            <AddPlacePopup
+              isOpen={isAddPlacePopupOpen}
               onClose={closeAllPopups}
               onAddPlace={handleAddPlaceSubmit}
             />
             <DeletePlacePopup
-              isOpen={isDeletePlacePopupOpen} 
+              isOpen={isDeletePlacePopupOpen}
               onClose={closeAllPopups}
               onDeletePlace={handleCardDelete}
               card={selectedCard}
             />
-            <ImagePopup 
+            <ImagePopup
               isOpen={ImagePopupOpen}
-              card={selectedCard} 
+              card={selectedCard}
               onClose={closeAllPopups}
             />
           </>
           )}
-          <InfoTooltip 
+          <InfoTooltip
             isOpen={isInfoTooltipPopupOpen}
             onClose={closeAllPopups}
             serverCallbackStatus={serverCallbackStatus}

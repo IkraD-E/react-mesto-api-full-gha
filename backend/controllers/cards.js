@@ -6,6 +6,7 @@ const BadRequest = require('../errors/BadRequest');
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
+  // res.send({ name, link, owner });
 
   Card
     .create({ name, link, owner })
@@ -18,7 +19,6 @@ module.exports.createCard = (req, res, next) => {
       }
     });
 };
-
 module.exports.getCards = (req, res, next) => {
   Card
     .find({})

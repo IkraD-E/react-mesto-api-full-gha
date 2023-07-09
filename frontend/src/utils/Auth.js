@@ -1,5 +1,6 @@
 const apiParams = {
-    link: 'https://auth.nomoreparties.co/',
+    link: 'https://ikrad.nomoreparties.sbs/',
+    // link: 'http://localhost:3001/',
     headers: {
         'Content-Type': 'application/json'
     }
@@ -12,6 +13,7 @@ class Auth{
     }
 
     _checkResponse(res) {
+        console.log(res);
         if (res.ok) {
             return res
         }
@@ -22,28 +24,18 @@ class Auth{
         return fetch(url, options).then(this._checkResponse)
     }
 
-    //Сбор информации о пользователе
-    checkToken(jwt) {
-        return this._request(
-            `${this._link}users/me`, 
-            {
-                method: 'GET',
-                headers: {'Content-Type': 'application/json',
-                    "Authorization" : `Bearer ${jwt}`}}
-        );
-    }
-
     //Добавление пользователя на сервер
     addNewUserToServer(email, password) {
         return this._request(
-            `${this._link}signup`, 
+            `${this._link}signup`,
             {
                 method: 'POST',
                 body: JSON.stringify({
                     "password": password,
                     "email": email
                 }),
-                headers: this._headers
+                headers: this._headers,
+                credentials: "include"
             }
         );
     }
@@ -51,18 +43,47 @@ class Auth{
     //Аутентификация пользователя на сервере
     handleUserAuthorization(email, password) {
         return this._request(
-            `${this._link}signin`, 
+            `${this._link}signin`,
             {
                 method: 'POST',
                 body: JSON.stringify({
                     "password": password,
                     "email": email
                 }),
-                headers: this._headers
+                headers: this._headers,
+                credentials: "include"
             }
         );
     }
 
+    //Сбор информации о пользователе
+    checkToken() {
+        return this._request(
+            `${this._link}users/me`,
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include"
+            }
+        );
+    }
+
+    //Удалить куку
+
+    logout() {
+        return this._request(
+            `${this._link}users/me`,
+            {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                credentials: "include"
+            }
+        );
+    }
 }
 
 export const auth = new Auth(apiParams);

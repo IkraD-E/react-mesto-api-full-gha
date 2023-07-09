@@ -1,7 +1,8 @@
 const apiParams = {
-    link: 'https://mesto.nomoreparties.co/v1/cohort-62/',
+    link: 'https://ikrad.nomoreparties.sbs/',
+    // link: 'http://localhost:3001/',
     headers: {
-        authorization: 'e055b3b1-f0a3-420f-954c-707ea8c5fb7b',
+        // authorization: 'e055b3b1-f0a3-420f-954c-707ea8c5fb7b',
         'Content-Type': 'application/json'
     }
 }
@@ -26,30 +27,39 @@ class Api{
     //Сбор информации о пользователе
     getUserDataFromServer() {
         return this._request(
-            `${this._link}users/me`, 
-            {headers: this._headers}
+            `${this._link}users/me`,
+            {
+                method: 'GET',
+                headers: this._headers,
+                credentials: 'include',
+            }
         );
     }
 
     //Сбор информации о карточках
     getCardFromServer() {
         return this._request(
-            `${this._link}cards`, 
-            {headers: this._headers}
+            `${this._link}cards`,
+            {
+                method: 'GET',
+                headers: this._headers,
+                credentials: 'include',
+            }
         );
     }
 
     //Добавление карточки на сервер
     addNewPlaceToServer({name, link}) {
         return this._request(
-            `${this._link}cards`, 
+            `${this._link}cards`,
             {
                 method: 'POST',
                 body: JSON.stringify({
                     name: name,
                     link: link
                 }),
-                headers: this._headers
+                headers: this._headers,
+                credentials: 'include',
             }
         );
     }
@@ -57,10 +67,11 @@ class Api{
     //Удаление карточки с сервера
     deleteCardFromServer(cardId) {
         return this._request(
-            `${this._link}cards/${cardId}`, 
+            `${this._link}cards/${cardId}`,
             {
                 method: 'DELETE',
-                headers: this._headers
+                headers: this._headers,
+                credentials: 'include',
             }
         );
     }
@@ -68,14 +79,15 @@ class Api{
     //Изменить данные о пользователе на сервере
     setUserInfo(data) {
         return this._request(
-            `${this._link}users/me`, 
+            `${this._link}users/me`,
             {
                 method: 'PATCH',
                 body: JSON.stringify({
                     name: data.name,
-                    about: data.about
+                    about: data.about,
                 }),
-                headers: this._headers
+                headers: this._headers,
+                credentials: 'include',
             }
         );
     }
@@ -84,22 +96,23 @@ class Api{
     //Убрать лайк с сервера
     changeLikeCardStatus(cardId, isLiked) {
         return this._request(
-            `${this._link}cards/${cardId}/likes`, 
+            `${this._link}cards/${cardId}/likes`,
             {
                 method: isLiked ? 'DELETE' : 'PUT',
-                headers: this._headers
-        
+                headers: this._headers,
+                credentials: 'include',
             }
         );
     }
 
     handleChangeAvatar(newAvatarLink) {
         return this._request(
-            `${this._link}/users/me/avatar`, 
+            `${this._link}users/me/avatar`,
             {
                 method: 'PATCH',
                 body: JSON.stringify(newAvatarLink),
-                headers: this._headers
+                headers: this._headers,
+                credentials: 'include',
             }
         );
     }

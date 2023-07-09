@@ -1,3 +1,4 @@
+const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
@@ -10,6 +11,70 @@ const BadRequest = require('../errors/BadRequest');
 const opts = {
   new: true,
   runValidators: true,
+};
+
+module.exports.createUser = (req, res, next) => {
+  bcrypt
+    .hash(String(req.body.password), 10)
+    .then(
+      (hashedPassword) => {
+        User
+          .create({
+            ...req.body,
+            password: hashedPassword,
+          })
+          .then((user) => res.status(201).send({ data: user }))
+          .catch((err) => {
+            if (err.code === 11000) {
+              next(new UserDublication('Пользователь с этой почтой уже зарегестрирован'));
+            } else if (err.name === 'ValidationError') {
+              next(new BadRequest('Переданы некорректные данные при регистрации'));
+            } else {
+              next(err);
+            }
+          });
+      },
+    )
+    .catch((next));
+};
+
+module.exports.login = (req, res, next) => {
+  const { email, password } = req.body;
+
+  User
+    .findOne({ email })
+    .select('+password')
+    .orFail(() => next(new AuthError('Пользователь не найден')))
+    .then((user) => {
+      bcrypt.compare(String(password), user.password)
+        .then((isValidUser) => {
+          if (isValidUser) {
+            const token = jwt.sign(
+              { _id: user._id },
+              NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+              { expiresIn: '7d' },
+            );
+            res.cookie('jwt', token, {
+              maxAge: 360000 * 24 * 7,
+              httpOnly: true,
+              sameSite: true,
+              secure: true,
+            });
+            res.send({ data: user.toJSON() });
+          } else {
+            next(new AuthError('Неправильный логин или пароль'));
+          }
+        });
+    })
+    .catch(next);
+};
+
+module.exports.logout = (req, res) => {
+  res.cookie('jwt', 'none', {
+    httpOnly: true,
+    sameSite: true,
+  });
+  res.send({ message: 'Вы вышли из аккаунта' });
 };
 
 module.exports.getUsers = (req, res, next) => {
@@ -71,59 +136,4 @@ module.exports.updateUserAvatar = (req, res, next) => {
         next(err);
       }
     });
-};
-
-module.exports.createUser = (req, res, next) => {
-  bcrypt
-    .hash(String(req.body.password), 10)
-    .then(
-      (hashedPassword) => {
-        User
-          .create({
-            ...req.body,
-            password: hashedPassword,
-          })
-          .then((user) => res.status(201).send({ data: user }))
-          .catch((err) => {
-            if (err.code === 11000) {
-              next(new UserDublication('Пользователь с этой почтой уже зарегестрирован'));
-            } else if (err.name === 'ValidationError') {
-              next(new BadRequest('Переданы некорректные данные при регистрации'));
-            } else {
-              next(err);
-            }
-          });
-      },
-    )
-    .catch((next));
-};
-
-module.exports.login = (req, res, next) => {
-  const { email, password } = req.body;
-
-  User
-    .findOne({ email })
-    .select('+password')
-    .orFail(() => next(new AuthError('Пользователь не найден')))
-    .then((user) => {
-      bcrypt.compare(String(password), user.password)
-        .then((isValidUser) => {
-          if (isValidUser) {
-            const token = jwt.sign(
-              { _id: user._id },
-              'some-secret-key',
-              { expiresIn: '7d' },
-            );
-            res.cookie('jwt', token, {
-              maxAge: 360000,
-              httpOnly: true,
-              sameSite: true,
-            });
-            res.send({ data: user.toJSON() });
-          } else {
-            next(new AuthError('Неправильный логин или пароль'));
-          }
-        });
-    })
-    .catch(next);
 };
