@@ -29,17 +29,20 @@ function App() {
   }
 
   function handleTokenCheck() {
-    auth.checkToken()
-        .then(res => res.json())
-        .then(res => {
-          console.log(res);
-          if (res) {
+    if (localStorage.getItem('jwt')){
+      const jwt = localStorage.getItem('jwt');
+      auth.checkToken(jwt)
+        .then( res => res.json())
+        .then( res => {
+          const response = res;
+          if (response) {
             setLoggedIn(true);
-            handleSetUserEmail(res.email);
+            handleSetUserEmail(response.data.email);
             navigate("/", {replace: true});
           }
         })
-        .catch(res => console.log(res));
+        .catch(res => console.log(`Ошибка при проверке токена jwt: ${res.status}`));
+    }
   }
 
   React.useEffect(() => {
@@ -184,8 +187,7 @@ function App() {
     auth.handleUserAuthorization(email, password)
       .then((res => res.json()))
       .then((data) =>{
-        console.log(data);
-        if (data){
+        if (data.token){
           localStorage.setItem('jwt', data.token);
           setLoggedIn(true);
           navigate("/", {replace: true});
@@ -197,12 +199,12 @@ function App() {
       .catch(err => {
         handleSetServerCallbackStatus(err);
         handleOpenInfoTooltipPopup();
-        console.log(`Ошибка входа пользователя: ${err}`);
+        console.log(`Ошибка входа пользователя: ${res.status}`);
       });
   }
 
   function handleSignOut() {
-    auth.logout();
+    localStorage.removeItem('jwt');
     setLoggedIn(false);
     navigate('/signin');
   }

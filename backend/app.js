@@ -1,4 +1,5 @@
 require('dotenv').config();
+require('dotenv').config();
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
@@ -6,6 +7,8 @@ const { errors } = require('celebrate');
 const routerIndex = require('./routes/index');
 const errorHandler = require('./middlewares/errorHandler');
 const NotFound = require('./errors/NotFound');
+const cors = require('./middlewares/cors');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
@@ -42,6 +45,8 @@ app.use('/', routerIndex);
 app.use((req, res, next) => {
   next(new NotFound('Страница не найдена. Где вы взяли на неё ссылку?'));
 });
+
+app.use(errorLogger);
 
 app.use(errorLogger);
 
