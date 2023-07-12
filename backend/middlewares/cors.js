@@ -5,6 +5,8 @@ const allowedCors = [
   'https://ikrad.nomoreparties.sbs',
   'localhost:3000',
   'http://localhost:3000',
+  'localhost:3001',
+  'http://localhost:3001',
 ];
 
 const cors = (req, res, next) => {

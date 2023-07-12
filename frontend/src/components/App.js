@@ -49,7 +49,7 @@ function App() {
     loggedIn && Promise.all([api.getUserDataFromServer(), api.getCardFromServer()])
       .then(([userData, cards]) => {
           setUserData(userData);
-          setCards(cards);
+          setCards(cards.reverse());
     })
       .catch(err => console.log(err));
   }, [loggedIn]);
@@ -109,8 +109,21 @@ function App() {
     setIsInfoTooltipPopupOpen(false);
   }
 
+  function handleAddPlaceSubmit(newCard) {
+    api.addNewPlaceToServer(newCard)
+      .then((newCard) => {
+        console.log('App');
+        console.log(newCard.owner);
+        setCards([newCard, ...cardsList])
+      })
+      .then(() => {
+        closeAllPopups();
+      })
+      .catch(err => console.log(`Ошибка добавления нового места: ${err.status}`));
+  }
+
   function handleCardLike(card) {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    const isLiked = card.likes.some(i => i.toString() === currentUser._id);
     console.log(card);
     console.log(isLiked);
 
@@ -157,15 +170,6 @@ function App() {
       .catch(err => console.log(`Ошибка изменения аватара: ${err.status}`));
   }
 
-  function handleAddPlaceSubmit(newCard) {
-    api.addNewPlaceToServer(newCard)
-      .then((newCard) => setCards([newCard, ...cardsList]))
-      .then(() => {
-        closeAllPopups();
-      })
-      .catch(err => console.log(`Ошибка добавления нового места: ${err.status}`));
-  }
-
   function handleRegisterSubmit(email, password) {
     auth.addNewUserToServer(email, password)
       .then((res) =>{
@@ -185,7 +189,6 @@ function App() {
       .then((data) =>{
         console.log(data);
         if (data){
-          localStorage.setItem('jwt', data.token);
           setLoggedIn(true);
           navigate("/", {replace: true});
           setIsHeaderMobileMenuOpen(false);

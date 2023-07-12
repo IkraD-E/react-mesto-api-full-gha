@@ -1,6 +1,6 @@
 const apiParams = {
-    // link: 'https://ikrad.nomoreparties.sbs/',
-    link: 'http://localhost:3001/',
+    link: 'https://ikrad.nomoreparties.sbs/',
+    // link: 'http://localhost:3001/',
     headers: {
         // authorization: 'e055b3b1-f0a3-420f-954c-707ea8c5fb7b',
         'Content-Type': 'application/json'

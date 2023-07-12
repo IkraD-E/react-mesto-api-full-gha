@@ -9,7 +9,7 @@ const NotFound = require('./errors/NotFound');
 const cors = require('./middlewares/cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { PORT = 3001 } = process.env;
+const { PORT = 3000 } = process.env;
 
 const BASE_URL = 'mongodb://127.0.0.1:27017/mestodb';
 const app = express();
