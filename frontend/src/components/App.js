@@ -38,7 +38,7 @@ function App() {
             navigate("/", {replace: true});
           }
         })
-        .catch(err => console.log(err));
+        .catch(err => console.log(`Ошибка проверки токена: ${err}`));
   }
 
   React.useEffect(() => {
@@ -112,8 +112,6 @@ function App() {
   function handleAddPlaceSubmit(newCard) {
     api.addNewPlaceToServer(newCard)
       .then((newCard) => {
-        console.log('App');
-        console.log(newCard.owner);
         setCards([newCard, ...cardsList])
       })
       .then(() => {
@@ -187,7 +185,6 @@ function App() {
     auth.handleUserAuthorization(email, password)
       .then((res => res.json()))
       .then((data) =>{
-        console.log(data);
         if (data){
           setLoggedIn(true);
           navigate("/", {replace: true});
@@ -243,11 +240,27 @@ function App() {
             />
             <Route
               path="/signin"
-              element={<AuthForm onSubmit={handleLogInSubmit} formName="Вход" btnText="Войти"/>}
+              element={
+                <AuthForm 
+                  onSubmit={handleLogInSubmit} 
+                  formName="Вход" 
+                  btnText="Войти" 
+                  afterWords="Ещё не зарегистрированы?&nbsp;"
+                  linkText="Регистрация"
+                  link="/signup"
+                />}
             />
             <Route
               path="/signup"
-              element={<AuthForm onSubmit={handleRegisterSubmit} formName="Регистрация" btnText="Зарегистрироваться"/> }
+              element={
+                <AuthForm 
+                  onSubmit={handleRegisterSubmit} 
+                  formName="Регистрация" 
+                  btnText="Зарегистрироваться"
+                  afterWords="Уже зарегистрированы?&nbsp;"
+                  linkText="Войти"
+                  link="/signin"
+                /> }
             />
           </Routes>
           {loggedIn && (

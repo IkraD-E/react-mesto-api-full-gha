@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "../hooks/useForm";
 
-function AuthForm({onSubmit, formName, btnText}) {
+function AuthForm({onSubmit, formName, btnText, afterWords, linkText, link}) {
   function handleSubmit(e) {
     e.preventDefault();
     onSubmit(
@@ -50,9 +50,9 @@ function AuthForm({onSubmit, formName, btnText}) {
             {btnText}
           </button>
           <div className="afterwords">
-            <p className="afterwords__text">Уже зарегистрированы?&nbsp;</p>
-            <Link className="afterwords__link" to={"/signin"}>
-              Войти
+            <p className="afterwords__text">{afterWords}</p>
+            <Link className="afterwords__link" to={link}>
+              {linkText}
             </Link>
           </div>
         </form>
